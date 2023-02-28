@@ -1,0 +1,69 @@
+# fly.toml file for deploying Portainer on Fly.io with a volume
+
+# Define app name and region
+app = "hophamlam-portainer"
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+# Define Docker image and command
+[build]
+image = "portainer/portainer-ce:latest"
+
+# Define volume and mount point
+[mounts]
+  source = "hophamlam_portainer_vol"
+  destination = "/data"
+
+# Define ports to expose
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+
+[[services]]
+  http_checks = []
+  internal_port = 9000
+  processes = ["app"]
+  protocol = "tcp"
+  script_checks = []
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+    
+  [[services.ports]]
+    port = 9000
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
+    
+[[services]]
+  http_checks = []
+  internal_port = 8000
+  processes = ["edge"]
+  protocol = "tcp"
+  script_checks = []
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    port = 8000
+
+  [[services.tcp_checks]]
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s" 
