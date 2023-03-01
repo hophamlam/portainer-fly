@@ -1,4 +1,4 @@
-# Personal Uptime Kuma server
+# A Portainer client to watch other Agent
 
 ## Create a 1Gb volume for portainer
 
